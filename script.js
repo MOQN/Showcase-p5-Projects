@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const name = parts[0].trim();
           const link = parts[1].trim();
           const note = parts.length > 2 ? parts[2].trim() : '';
+          const instruction = parts.length > 3 ? parts[3].trim() : ''; // Fetch the 4th column
 
           // Create list item container
           const li = document.createElement('li');
@@ -28,9 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
           noteDiv.className = 'project-note';
           noteDiv.textContent = note;
 
-          // Append elements to list item
+          // Append basic elements to list item
           li.appendChild(nameDiv);
           li.appendChild(noteDiv);
+
+          // Conditionally create and append the instruction element if data exists
+          if (instruction !== '') {
+            const instructionDiv = document.createElement('div');
+            instructionDiv.className = 'project-instruction';
+            instructionDiv.textContent = instruction;
+            li.appendChild(instructionDiv);
+          }
 
           // Add click event to swap iframe source
           li.addEventListener('click', () => {
