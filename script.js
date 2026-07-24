@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Fetch data from CSV
   fetch('projects.csv')
     .then(response => response.text())
     .then(data => {
@@ -14,26 +13,26 @@ document.addEventListener('DOMContentLoaded', () => {
           const name = parts[0].trim();
           const link = parts[1].trim();
           const note = parts.length > 2 ? parts[2].trim() : '';
-          const instruction = parts.length > 3 ? parts[3].trim() : ''; // Fetch the 4th column
 
-          // Create list item container
+          let instruction = '';
+          if (parts.length > 3) {
+            const rawInstruction = parts.slice(3).join(',');
+            instruction = rawInstruction.trim().replace(/^"|"$/g, '').trim();
+          }
+
           const li = document.createElement('li');
 
-          // Create project name element
           const nameDiv = document.createElement('div');
           nameDiv.className = 'project-name';
           nameDiv.textContent = name;
 
-          // Create additional note element
           const noteDiv = document.createElement('div');
           noteDiv.className = 'project-note';
           noteDiv.textContent = note;
 
-          // Append basic elements to list item
           li.appendChild(nameDiv);
           li.appendChild(noteDiv);
 
-          // Conditionally create and append the instruction element if data exists
           if (instruction !== '') {
             const instructionDiv = document.createElement('div');
             instructionDiv.className = 'project-instruction';
@@ -41,21 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
             li.appendChild(instructionDiv);
           }
 
-          // Add click event to swap iframe source
           li.addEventListener('click', () => {
             iframe.src = link;
 
-            // Handle active state styling
             document.querySelectorAll('#project-list li').forEach(el => {
               el.classList.remove('active');
             });
             li.classList.add('active');
           });
 
-          // Append list item to the menu
           listElement.appendChild(li);
         }
       });
     })
-    .catch(error => console.error('Error loading CSV data:', error));
+    .catch(error => console.error(error));
 });
